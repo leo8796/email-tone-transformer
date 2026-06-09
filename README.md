@@ -4,6 +4,8 @@ Email Tone Transformer is a small AI-powered Python tool that rewrites emails in
 
 The project takes a user's original email and selected tone, then returns a rewritten version of the email together with key changes made by the model.
 
+It supports both a terminal-based interface and a simple Gradio web interface.
+
 ## Features
 
 - Rewrite emails into different tones
@@ -14,7 +16,9 @@ The project takes a user's original email and selected tone, then returns a rewr
   - friendly
 - Preserve the original meaning of the email
 - Avoid inventing new facts
-- Show key changes made by the model
+- Return both the rewritten email and key changes
+- Run from the terminal with `app.py`
+- Run as a simple web app with `app_gradio.py`
 - Store API keys securely with `.env`
 - Keep the project structure simple and beginner-friendly
 
@@ -23,18 +27,22 @@ The project takes a user's original email and selected tone, then returns a rewr
 - Python
 - Google Gemini API
 - google-genai
+- Gradio
 - python-dotenv
-- JSON
+- JSON parsing
+- Git/GitHub
 
 ## Project Structure
 
 ```text
-01-email-tone-transformer/
+email-tone-transformer/
 ├── app.py
+├── app_gradio.py
 ├── prompts.py
 ├── llm_client.py
 ├── requirements.txt
 ├── README.md
+├── DEVELOPMENT_NOTES.md
 ├── .env.example
 ├── .gitignore
 └── examples/
@@ -52,12 +60,14 @@ User email
 → Prompt construction
 → Gemini API call
 → Model response
+→ Output parsing
 → Display rewritten email and key changes
 ```
 
-The project is split into three main Python files:
+The project is split into four main Python files:
 
 - `app.py` handles the command-line user flow.
+- `app_gradio.py` provides the Gradio web interface.
 - `prompts.py` builds the prompt sent to Gemini.
 - `llm_client.py` handles the Gemini API call and response parsing.
 
@@ -66,23 +76,35 @@ The project is split into three main Python files:
 ### 1. Clone the repository
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/email-tone-transformer.git
+git clone https://github.com/leo8796/email-tone-transformer.git
 cd email-tone-transformer
 ```
 
-### 2. Install dependencies
+### 2. Create a virtual environment
+
+```bash
+python3 -m venv .venv
+```
+
+### 3. Install dependencies
+
+```bash
+./.venv/bin/python -m pip install -r requirements.txt
+```
+
+If you are not using the local virtual environment, you can also install dependencies with:
 
 ```bash
 pip install -r requirements.txt
 ```
 
-If your system uses `python3`:
+or:
 
 ```bash
 python3 -m pip install -r requirements.txt
 ```
 
-### 3. Create a `.env` file
+### 4. Create a `.env` file
 
 Create a `.env` file in the project root:
 
@@ -92,23 +114,35 @@ GEMINI_API_KEY=your_gemini_api_key_here
 
 Do not commit your real `.env` file to GitHub.
 
-### 4. Run the app
+This project includes `.env.example` as a safe template.
+
+## Running the App
+
+### Option 1: Run the terminal version
 
 ```bash
-python app.py
+./.venv/bin/python app.py
 ```
 
-If your system uses `python3`:
+If you are not using the local virtual environment:
 
 ```bash
 python3 app.py
 ```
 
-If you are using the local virtual environment directly:
+### Option 2: Run the Gradio web version
 
 ```bash
-./.venv/bin/python app.py
+./.venv/bin/python app_gradio.py
 ```
+
+Then open the local URL shown in the terminal, usually:
+
+```text
+http://127.0.0.1:7860
+```
+
+The Gradio interface lets users paste an email, select a target tone, and view both the rewritten email and the key changes.
 
 ## Example Input
 
@@ -149,7 +183,7 @@ Key Changes
 
 ## Example Files
 
-Example input and output are also included in the `examples/` folder:
+Example input and output are included in the `examples/` folder:
 
 ```text
 examples/input_example.txt
@@ -165,26 +199,29 @@ Through this project, I practiced:
 - Using a `.env` file safely
 - Designing prompts for controlled rewriting
 - Asking an LLM for structured output
-- Handling model responses in a Python app
+- Parsing model responses in a Python app
+- Handling cases where the model response is not perfectly formatted
+- Building both terminal and web-based interfaces
 - Organizing a small AI project into multiple files
 - Using Git and GitHub for project version control
 
 ## Limitations
 
-- The app currently runs in the terminal only.
+- The app currently supports a small fixed set of tones.
 - The model output may occasionally need additional formatting cleanup.
-- The app does not currently have a web interface.
-- It supports a small fixed set of tones.
+- The Gradio interface is currently designed for local demo use.
+- The app depends on Gemini API availability and supported user location.
 
 ## Future Improvements
 
-- Add a simple Gradio web interface
+- Deploy the Gradio app online
 - Add more tone options
 - Improve structured JSON reliability
 - Add before-and-after comparison
 - Support multiple LLM providers such as OpenAI or Claude
 - Add automated tests
-- Add deployment instructions
+- Add demo video and slides links
+- Add project screenshots to the README
 
 ## Security Note
 
